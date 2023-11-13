@@ -1,7 +1,8 @@
 package ch.zli.m223.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -23,12 +24,24 @@ public class EntryService {
 
     @Transactional
     public Entry deleteEntry(long entryId) {
-        Optional<Entry> entry = findAll().stream().filter(e -> e.getId().equals(entryId)).findFirst();
-        if(!entry.isPresent()) {
-            return null;
+        Entry entry = entityManager.find(Entry.class, entryId);
+        entityManager.remove(entry);
+        return entry;
+    }
+
+    @Transactional
+    public Entry patchEntry(Map<String, LocalDateTime> partialEntry, long entryId) {
+        Entry entry = entityManager.find(Entry.class, entryId);
+        LocalDateTime checkIn = partialEntry.get("checkIn");
+        LocalDateTime checkOut = partialEntry.get("checkOut");
+        if (checkIn != null) {
+            entry.setCheckIn(checkIn);
         }
-        entityManager.remove(entry.get());
-        return entry.get();
+        if (checkOut != null) {
+            entry.setCheckIn(checkOut);
+        }
+        entityManager.flush();
+        return entry;
     }
 
     public List<Entry> findAll() {
