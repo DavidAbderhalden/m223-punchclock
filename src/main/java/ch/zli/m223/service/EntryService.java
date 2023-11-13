@@ -1,6 +1,7 @@
 package ch.zli.m223.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -18,6 +19,16 @@ public class EntryService {
     public Entry createEntry(Entry entry) {
         entityManager.persist(entry);
         return entry;
+    }
+
+    @Transactional
+    public Entry deleteEntry(long entryId) {
+        Optional<Entry> entry = findAll().stream().filter(e -> e.getId().equals(entryId)).findFirst();
+        if(!entry.isPresent()) {
+            return null;
+        }
+        entityManager.remove(entry.get());
+        return entry.get();
     }
 
     public List<Entry> findAll() {
