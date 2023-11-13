@@ -1,8 +1,13 @@
 package ch.zli.m223.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.AssertTrue;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.time.LocalDateTime;
 
@@ -18,6 +23,10 @@ public class Entry {
 
   @Column(nullable = false)
   private LocalDateTime checkOut;
+
+  @ManyToOne(optional = false)
+  @Fetch(FetchMode.JOIN)
+  private Category category;
 
   public Long getId() {
     return id;
@@ -35,11 +44,27 @@ public class Entry {
     this.checkIn = checkIn;
   }
 
+
   public LocalDateTime getCheckOut() {
     return checkOut;
   }
 
   public void setCheckOut(LocalDateTime checkOut) {
     this.checkOut = checkOut;
+  }
+
+  public Category getCategory() {
+    return category;
+  }
+
+  public void setCategory(Category category) {
+    this.category = category;
+  }
+
+  // FIXME: Still no assertions are being taken into account
+  @Schema(hidden = true)
+  @AssertTrue(message = "check out should always be after check in")
+  private boolean isCheckOutAfterCheckIn() {
+    return this.checkOut.isAfter(this.checkIn);
   }
 }

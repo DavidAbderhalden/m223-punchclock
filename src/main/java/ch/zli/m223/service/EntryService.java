@@ -30,10 +30,10 @@ public class EntryService {
     }
 
     @Transactional
-    public Entry patchEntry(Map<String, LocalDateTime> partialEntry, long entryId) {
+    public Entry patchEntry(Map<String, LocalDateTime> partialEntryMap, long entryId) {
         Entry entry = entityManager.find(Entry.class, entryId);
-        LocalDateTime checkIn = partialEntry.get("checkIn");
-        LocalDateTime checkOut = partialEntry.get("checkOut");
+        LocalDateTime checkIn = partialEntryMap.get("checkIn");
+        LocalDateTime checkOut = partialEntryMap.get("checkOut");
         if (checkIn != null) {
             entry.setCheckIn(checkIn);
         }
