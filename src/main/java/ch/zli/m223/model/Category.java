@@ -37,7 +37,7 @@ public class Category {
         return this.id;
     }
 
-    public Set<Entry> getEntities() {
+    public Set<Entry> getEntries() {
         return entries;
       }
     

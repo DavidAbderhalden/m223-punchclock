@@ -42,14 +42,14 @@ public class EntryController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(summary = "Creates a new entry.", description = "Creates a new entry and returns the newly added entry.")
     public Entry create(@Valid Entry entry) {
-       return entryService.createEntry(entry);
+       return entryService.createEntity(entry);
     }
 
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Deletes an existing entry", description = "Deletes an existing entry and returns the deleted entry.")
     public Entry delete(@QueryParam("entry_id") long entryId) {
-        return entryService.deleteEntry(entryId);
+        return entryService.deleteEntity(entryId);
     }
 
     @PATCH
@@ -57,6 +57,6 @@ public class EntryController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(summary = "Patches an existing entry", description = "Patches an existing entry and returns the new entry")
     public Entry patch(@RequestBody Map<String, LocalDateTime> partialEntry, @QueryParam("entry_id") long entryId) {
-        return entryService.patchEntry(partialEntry, entryId);
+        return entryService.patchEntity(partialEntry, entryId);
     }
 }
