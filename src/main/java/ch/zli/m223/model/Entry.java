@@ -30,12 +30,13 @@ public class Entry {
   @Fetch(FetchMode.JOIN)
   private Category category;
 
+  @ManyToOne(optional = false)
+  @JsonIgnoreProperties("entries")
+  @Fetch(FetchMode.JOIN)
+  private User user;
+
   @ManyToMany(fetch = FetchType.EAGER)
-  @JoinTable(
-      name = "entry_tag",
-      joinColumns = @JoinColumn(name = "entry_id"),
-      inverseJoinColumns = @JoinColumn(name = "tag_id")
-  )
+  @JoinTable(name = "entry_tag", joinColumns = @JoinColumn(name = "entry_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"))
   @JsonIgnoreProperties("entries")
   private Set<Tag> tags;
 
@@ -50,7 +51,6 @@ public class Entry {
   public void setCheckIn(LocalDateTime checkIn) {
     this.checkIn = checkIn;
   }
-
 
   public LocalDateTime getCheckOut() {
     return checkOut;
@@ -76,7 +76,16 @@ public class Entry {
     this.category = category;
   }
 
-  // FIXME: Still no assertions are being taken into account
+  public User getUser() {
+    return this.user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
+  }
+
+
+  // ./mvnw quarkus:add-extension -Dextensions='hibernate-validator'
   @Schema(hidden = true)
   @AssertTrue(message = "check out should always be after check in")
   private boolean isCheckOutAfterCheckIn() {
