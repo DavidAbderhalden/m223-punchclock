@@ -1,5 +1,6 @@
 package ch.zli.m223.model;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -8,12 +9,12 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -24,8 +25,7 @@ import ch.zli.m223.enums.ApplicationRole;
 import java.util.Set;
 
 @Entity
-public class User {
-
+public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema(readOnly = true)
@@ -48,18 +48,21 @@ public class User {
     @Column(nullable = false)
     private String lastName;
 
-    // FIXME: Doesn't work yet
     @Column(nullable = false)
-    @ColumnDefault(value="user")
-    @ElementCollection
-    @Enumerated(EnumType.STRING)
-    private Set<ApplicationRole> roles;
+    @Schema(hidden = true)
+    private String password;
 
-    @OneToMany(mappedBy = "user")
-    @JsonIgnoreProperties("user")
+    @ElementCollection(targetClass = ApplicationRole.class)
+    @CollectionTable(name = "roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    protected Set<ApplicationRole> roles;
+
+    @OneToMany(mappedBy = "customer")
+    @JsonIgnoreProperties("customer")
     @Fetch(FetchMode.JOIN)
     private Set<Entry> entries;
-
+    
     public Long getId() {
         return this.id;
     }
@@ -112,4 +115,11 @@ public class User {
         this.entries = entries;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }    
 }

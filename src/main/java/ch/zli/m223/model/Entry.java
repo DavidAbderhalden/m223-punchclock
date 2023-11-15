@@ -33,7 +33,7 @@ public class Entry {
   @ManyToOne(optional = false)
   @JsonIgnoreProperties("entries")
   @Fetch(FetchMode.JOIN)
-  private User user;
+  private Customer customer;
 
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "entry_tag", joinColumns = @JoinColumn(name = "entry_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"))
@@ -76,12 +76,12 @@ public class Entry {
     this.category = category;
   }
 
-  public User getUser() {
-    return this.user;
+  public Customer getCustomer() {
+    return this.customer;
   }
 
-  public void setUser(User user) {
-    this.user = user;
+  public void setCustomer(Customer customer) {
+    this.customer = customer;
   }
 
 

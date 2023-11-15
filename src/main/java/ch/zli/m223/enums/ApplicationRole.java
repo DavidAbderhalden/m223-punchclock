@@ -1,9 +1,9 @@
 package ch.zli.m223.enums;
 
 public enum ApplicationRole {
-    ADMINISTRATOR("administrator"),
-    USER("user"),
-    DEVELOPER("developer");
+    ADMINISTRATOR("ADMINISTRATOR"),
+    USER("USER"),
+    DEVELOPER("DEVELOPER");
 
     private final String label;
 
@@ -17,7 +17,7 @@ public enum ApplicationRole {
 
     public static ApplicationRole fromString(String label) {
         for (ApplicationRole role : values()) {
-            if (role.label.equals(label)) {
+            if (role.label.equals(label.toUpperCase())) {
                 return role;
             }
         }
